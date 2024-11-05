@@ -1,3 +1,9 @@
+
+#define USER_H
+
+// Định nghĩa kiểu uint
+typedef unsigned int uint;
+
 struct stat;
 
 // system calls
@@ -22,6 +28,9 @@ int getpid(void);
 char* sbrk(int);
 int sleep(int);
 int uptime(void);
+int trace(int trace_mask);
+struct sysinfo;
+int sysinfo(struct sysinfo*);
 
 // ulib.c
 int stat(const char*, struct stat*);

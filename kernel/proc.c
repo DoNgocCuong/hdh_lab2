@@ -5,6 +5,9 @@
 #include "spinlock.h"
 #include "proc.h"
 #include "defs.h"
+//#include "proc.h" // thêm dòng này nếu chưa có
+
+// extern struct proc proc[NPROC]; // khai báo biến proc
 
 struct cpu cpus[NCPU];
 
@@ -294,7 +297,9 @@ fork(void)
     release(&np->lock);
     return -1;
   }
+  np->trace_mask=p->trace_mask;
   np->sz = p->sz;
+  
 
   // copy saved user registers.
   *(np->trapframe) = *(p->trapframe);
@@ -692,4 +697,19 @@ procdump(void)
     printf("%d %s %s", p->pid, state, p->name);
     printf("\n");
   }
+}
+
+uint64
+nproc(void)
+{
+  int nproc = 0;
+  struct proc *p;
+  for(p = proc; p < &proc[NPROC]; p++){
+    acquire(&p->lock);
+    if(p->state != UNUSED){
+      nproc++;
+    }
+    release(&p->lock);
+  }
+  return nproc;
 }
